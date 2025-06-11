@@ -53,6 +53,7 @@ export default function App() {
     />
   </NoteModal>
 )}
+
     </div>
   );
 }
