@@ -10,7 +10,7 @@ interface NoteFormProps {
   onClose: () => void;
 }
 
-const tags: NoteTag[] = ['Todo', 'Work', 'Personal', 'Shopping'];
+const tags: NoteTag[] = ['Todo', 'Work', 'Personal', 'Meeting', 'Shopping'];
 
 const NoteForm: FC<NoteFormProps> = ({ onClose }) => {
   const queryClient = useQueryClient();
@@ -23,16 +23,27 @@ const NoteForm: FC<NoteFormProps> = ({ onClose }) => {
     },
   });
 
-  const formik = useFormik({
+  const formik = useFormik<{
+    title: string;
+    content: string;
+    tag: NoteTag;
+  }>({
     initialValues: {
       title: '',
       content: '',
-      tag: 'Todo' as NoteTag,
+      tag: 'Todo',
     },
     validationSchema: Yup.object({
-      title: Yup.string().required('Title is required'),
-      content: Yup.string().required('Content is required'),
-      tag: Yup.mixed<NoteTag>().oneOf(tags).required(),
+      title: Yup.string()
+        .min(3, 'Title must be at least 3 characters')
+        .max(50, 'Title must be at most 50 characters')
+        .required('Title is required'),
+      content: Yup.string()
+        .max(500, 'Content must be at most 500 characters')
+        .required('Content is required'),
+      tag: Yup.mixed<NoteTag>()
+        .oneOf(tags, 'Invalid tag')
+        .required('Tag is required'),
     }),
     onSubmit: values => {
       mutation.mutate(values);
@@ -46,11 +57,12 @@ const NoteForm: FC<NoteFormProps> = ({ onClose }) => {
         <input
           id="title"
           name="title"
+          className={css.input}
           onChange={formik.handleChange}
           value={formik.values.title}
         />
         {formik.touched.title && formik.errors.title && (
-          <div className={css.error}>{formik.errors.title}</div>
+          <span className={css.error}>{formik.errors.title}</span>
         )}
       </div>
 
@@ -59,11 +71,13 @@ const NoteForm: FC<NoteFormProps> = ({ onClose }) => {
         <textarea
           id="content"
           name="content"
+          rows={8}
+          className={css.textarea}
           onChange={formik.handleChange}
           value={formik.values.content}
         />
         {formik.touched.content && formik.errors.content && (
-          <div className={css.error}>{formik.errors.content}</div>
+          <span className={css.error}>{formik.errors.content}</span>
         )}
       </div>
 
@@ -72,6 +86,7 @@ const NoteForm: FC<NoteFormProps> = ({ onClose }) => {
         <select
           id="tag"
           name="tag"
+          className={css.select}
           onChange={formik.handleChange}
           value={formik.values.tag}
         >
@@ -81,13 +96,20 @@ const NoteForm: FC<NoteFormProps> = ({ onClose }) => {
             </option>
           ))}
         </select>
+        {formik.touched.tag && formik.errors.tag && (
+          <span className={css.error}>{formik.errors.tag}</span>
+        )}
       </div>
 
       <div className={css.actions}>
-        <button type="button" onClick={onClose} className={css.cancel}>
+        <button type="button" className={css.cancelButton} onClick={onClose}>
           Cancel
         </button>
-        <button type="submit" className={css.submit} disabled={mutation.isPending}>
+        <button
+          type="submit"
+          className={css.submitButton}
+          disabled={mutation.isPending}
+        >
           Create note
         </button>
       </div>

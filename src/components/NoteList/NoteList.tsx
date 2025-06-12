@@ -11,8 +11,8 @@ interface NoteListProps {
 const NoteList: FC<NoteListProps> = ({ notes }) => {
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
-    mutationFn: (id: number) => deleteNote(id),
+  const { mutate, isPending } = useMutation({
+    mutationFn: deleteNote,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notes'] });
     },
@@ -30,8 +30,8 @@ const NoteList: FC<NoteListProps> = ({ notes }) => {
             <span className={css.tag}>{note.tag}</span>
             <button
               className={css.button}
-              onClick={() => mutation.mutate(Number(note.id))} // явно приводимо до number
-              disabled={mutation.isPending}
+              onClick={() => mutate(note.id)}
+              disabled={isPending}
             >
               Delete
             </button>
