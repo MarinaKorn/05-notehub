@@ -6,7 +6,7 @@ const BASE_URL = 'https://notehub-public.goit.study/api/notes';
 const instance = axios.create({
   baseURL: BASE_URL,
   headers: {
-    Authorization: `Bearer ${import.meta.env.VITE_NOTEHUB_TOKEN}`,
+    Authorization: 'Bearer ${import.meta.env.VITE_NOTEHUB_TOKEN}',
   },
 });
 
@@ -28,7 +28,9 @@ export const fetchNotes = async (
   };
 };
 
-export const createNote = async (note: Omit<Note, 'id' | 'createdAt'>): Promise<Note> => {
+export const createNote = async (
+  note: Omit<Note, 'id' | 'createdAt'>
+): Promise<Note> => {
   const response = await instance.post('/', note);
   return response.data;
 };

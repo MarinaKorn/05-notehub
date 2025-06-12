@@ -5,13 +5,14 @@ import type { Note } from '../../types/note';
 import css from './NoteList.module.css';
 
 interface NoteListProps {
-  notes: Note[];}
+  notes: Note[];
+}
 
 const NoteList: FC<NoteListProps> = ({ notes }) => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: deleteNote,
+    mutationFn: (id: number) => deleteNote(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notes'] });
     },
@@ -29,7 +30,7 @@ const NoteList: FC<NoteListProps> = ({ notes }) => {
             <span className={css.tag}>{note.tag}</span>
             <button
               className={css.button}
-              onClick={() => mutation.mutate(note.id)}
+              onClick={() => mutation.mutate(Number(note.id))} // явно приводимо до number
               disabled={mutation.isPending}
             >
               Delete

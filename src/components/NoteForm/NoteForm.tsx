@@ -32,7 +32,7 @@ const NoteForm: FC<NoteFormProps> = ({ onClose }) => {
     validationSchema: Yup.object({
       title: Yup.string().required('Title is required'),
       content: Yup.string().required('Content is required'),
-      tag: Yup.string().oneOf(tags).required(),
+      tag: Yup.mixed<NoteTag>().oneOf(tags).required(),
     }),
     onSubmit: values => {
       mutation.mutate(values);
@@ -43,21 +43,42 @@ const NoteForm: FC<NoteFormProps> = ({ onClose }) => {
     <form className={css.form} onSubmit={formik.handleSubmit}>
       <div className={css.formGroup}>
         <label htmlFor="title">Title</label>
-        <input id="title" name="title" onChange={formik.handleChange} value={formik.values.title} />
-        {formik.touched.title && formik.errors.title && <div className={css.error}>{formik.errors.title}</div>}
+        <input
+          id="title"
+          name="title"
+          onChange={formik.handleChange}
+          value={formik.values.title}
+        />
+        {formik.touched.title && formik.errors.title && (
+          <div className={css.error}>{formik.errors.title}</div>
+        )}
       </div>
 
       <div className={css.formGroup}>
         <label htmlFor="content">Content</label>
-        <textarea id="content" name="content" onChange={formik.handleChange} value={formik.values.content} />
-        {formik.touched.content && formik.errors.content && <div className={css.error}>{formik.errors.content}</div>}
+        <textarea
+          id="content"
+          name="content"
+          onChange={formik.handleChange}
+          value={formik.values.content}
+        />
+        {formik.touched.content && formik.errors.content && (
+          <div className={css.error}>{formik.errors.content}</div>
+        )}
       </div>
 
       <div className={css.formGroup}>
         <label htmlFor="tag">Tag</label>
-        <select id="tag" name="tag" onChange={formik.handleChange} value={formik.values.tag}>
+        <select
+          id="tag"
+          name="tag"
+          onChange={formik.handleChange}
+          value={formik.values.tag}
+        >
           {tags.map(tag => (
-            <option key={tag} value={tag}>{tag}</option>
+            <option key={tag} value={tag}>
+              {tag}
+            </option>
           ))}
         </select>
       </div>
