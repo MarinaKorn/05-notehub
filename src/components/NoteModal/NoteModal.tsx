@@ -6,9 +6,8 @@ import NoteForm from '../NoteForm/NoteForm';
 
 interface NoteModalProps {
   onClose: () => void;
+  children: React.ReactNode;
 }
-
-const modalRoot = document.getElementById('modal-root') as HTMLElement;
 
 const NoteModal: FC<NoteModalProps> = ({ onClose }) => {
   useEffect(() => {
@@ -34,12 +33,17 @@ const NoteModal: FC<NoteModalProps> = ({ onClose }) => {
   };
 
   return createPortal(
-    <div className={css.backdrop} onClick={handleBackdropClick} role="dialog" aria-modal="true">
+    <div
+      className={css.backdrop}
+      onClick={handleBackdropClick}
+      role="dialog"
+      aria-modal="true"
+    >
       <div className={css.modal}>
         <NoteForm onClose={onClose} />
       </div>
     </div>,
-    modalRoot
+    document.body
   );
 };
 

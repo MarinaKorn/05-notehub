@@ -8,6 +8,7 @@ import SearchBox from '../SearchBox/SearchBox';
 import NoteList from '../NoteList/NoteList';
 import NoteModal from '../NoteModal/NoteModal';
 import Pagination from '../Pagination/Pagination';
+import NoteForm from '../NoteForm/NoteForm';
 
 import css from './App.module.css';
 
@@ -21,25 +22,30 @@ export default function App() {
     setIsOpen(prev => !prev);
   };
 
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
+    setPage(1); 
+  };
+
   const {
     data,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['notes', page, debouncedSearch],
+    queryKey: ['notes', debouncedSearch, page], 
     queryFn: () => fetchNotes(page, debouncedSearch),
     placeholderData: (keep) => keep,
   });
 
-  const notes = data?.notes || [];
-  const totalPages = data?.totalPages || 0;
+  const notes = data?.notes ?? [];
+  const totalPages = data?.totalPages ?? 0;
 
   return (
     <div className={css.app}>
       <Toaster position="top-right" />
 
       <header className={css.toolbar}>
-        <SearchBox value={search} onChange={setSearch} />
+        <SearchBox value={search} onChange={handleSearchChange} />
         <button className={css.button} onClick={handleToggleModal}>
           Create note +
         </button>
@@ -58,7 +64,11 @@ export default function App() {
         />
       )}
 
-{isOpen && <NoteModal onClose={handleToggleModal} />}
+      {isOpen && (
+        <NoteModal onClose={handleToggleModal}>
+          <NoteForm onClose={handleToggleModal} />
+        </NoteModal>
+      )}
     </div>
   );
 }
