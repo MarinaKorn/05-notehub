@@ -8,7 +8,6 @@ import SearchBox from '../SearchBox/SearchBox';
 import NoteList from '../NoteList/NoteList';
 import NoteModal from '../NoteModal/NoteModal';
 import Pagination from '../Pagination/Pagination';
-import NoteForm from '../NoteForm/NoteForm';
 
 import css from './App.module.css';
 
@@ -59,11 +58,7 @@ export default function App() {
         />
       )}
 
-      {isOpen && (
-        <NoteModal onClose={handleToggleModal}>
-          <NoteForm onClose={handleToggleModal} />
-        </NoteModal>
-      )}
+{isOpen && <NoteModal onClose={handleToggleModal} />}
     </div>
   );
 }
