@@ -6,19 +6,19 @@ const BASE_URL = 'https://notehub-public.goit.study/api/notes';
 const instance = axios.create({
   baseURL: BASE_URL,
   headers: {
-    Authorization: 'Bearer ${import.meta.env.VITE_NOTEHUB_TOKEN}',
+    Authorization: `Bearer ${import.meta.env.VITE_NOTEHUB_TOKEN}`,
   },
-});
 
+});
 export const fetchNotes = async (
   page: number,
   search: string
 ): Promise<{ notes: Note[]; totalPages: number }> => {
-  const response = await instance.get('/', {
+  const response = await instance.get("/", {
     params: {
       page,
       perPage: 12,
-      search,
+      ...(search !== "" && { search: search }),
     },
   });
 
