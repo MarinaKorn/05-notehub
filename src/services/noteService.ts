@@ -18,7 +18,7 @@ export const fetchNotes = async (
     params: {
       page,
       perPage: 12,
-      ...(search !== "" && { search: search }),
+      ...(search !== "" && { search }),
     },
   });
 
